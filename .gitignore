@@ -22,5 +22,5 @@ target/
 ### VS Code ###
 .vscode/
 
-### Environment ###
+### Environment Variables ###
 .env
