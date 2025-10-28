@@ -1,0 +1,36 @@
+<!-- Main entry point of the application -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Question Manager</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Login section containing the login form -->
+        <div id="loginSection">
+            <!-- Login form title -->
+            <h2 class="login-title">Login</h2>
+            <!-- Login form with submit handler -->
+            <form id="loginForm" onsubmit="login(event)">
+                <!-- Username input field -->
+                <input type="text" id="username" placeholder="Username" required>
+                <!-- Password input field -->
+                <input type="password" id="password" placeholder="Password" required>
+                <!-- Submit button for login -->
+                <button type="submit" class="btn primary">Login</button>
+            </form>
+            <!-- Registration link section -->
+            <div class="register-link">
+                <!-- Button to navigate to registration page -->
+                <button onclick="window.location.href='register.html'" class="btn secondary">Register New Account</button>
+            </div>
+        </div>
+    </div>
+    <!-- Link to JavaScript file for functionality -->
+    <script src="script.js"></script>
+</body>
+</html> 

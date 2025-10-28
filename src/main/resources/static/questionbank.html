@@ -1,0 +1,200 @@
+<!-- Question Bank Management Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Question Bank</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax configuration for mathematical notation support -->
+    <script>
+        window.MathJax = {
+            loader: {load: ['input/tex', 'output/chtml']},
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <!-- Load MathJax library -->
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Header section with bank title and navigation buttons -->
+        <div class="header">
+            <h1 id="bankTitle">Loading...</h1>
+            <div class="header-buttons">
+                <!-- Button to create a new quiz from this bank -->
+                <button onclick="createQuiz()" class="primary-btn">Create Quiz</button>
+                <!-- Button to return to dashboard -->
+                <button onclick="window.location.href='dashboard.html'" class="back-btn">Back to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Add Question Form Section -->
+        <section class="section">
+            <h2>Add New Question</h2>
+            <!-- Form for adding new questions -->
+            <form id="questionForm">
+                <!-- Question Type Selection -->
+                <div class="form-group">
+                    <label for="questionType" class="required">Question Type:</label>
+                    <!-- Dropdown for selecting question type -->
+                    <select id="questionType" required onchange="handleQuestionTypeChange()">
+                        <option value="STANDARD">Standard Question</option>
+                        <option value="WITH_SUBSECTIONS">Question with Subsections</option>
+                        <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Form Fields Container -->
+                <div id="questionFields" style="display: none;">
+                    <!-- Question Text Input -->
+                    <div class="form-group">
+                        <label for="questionText" class="required">Question:</label>
+                        <textarea id="questionText" placeholder="Enter your question" required></textarea>
+                    </div>
+
+                    <!-- Points Input -->
+                    <div class="form-group">
+                        <label for="points" class="required">Points:</label>
+                        <input type="number" id="points" min="1" required>
+                    </div>
+
+                    <!-- Standard Question Fields -->
+                    <div id="standardFields" style="display: none;">
+                        <!-- Mark Scheme Input -->
+                        <div class="form-group" id="markSchemeGroup">
+                            <label for="markScheme" class="required">Mark Scheme:</label>
+                            <textarea id="markScheme" rows="3" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Subsection Fields Container -->
+                    <div id="subQuestionsSection" style="display: none;">
+                        <div id="subQuestionsList"></div>
+                        <!-- Button to add more sub-questions -->
+                        <button type="button" class="secondary-btn" onclick="addSubQuestionField()">Add Sub-Question</button>
+                    </div>
+
+                    <!-- Multiple Choice Fields Container -->
+                    <div id="multipleChoiceSection" style="display: none;">
+                        <div id="optionsList"></div>
+                        <!-- Button to add more options -->
+                        <button type="button" class="secondary-btn" onclick="addOptionField()">Add Option</button>
+                    </div>
+
+                    <!-- Level Selection -->
+                    <div class="form-group">
+                        <label for="level" class="required">Level:</label>
+                        <select id="level" required>
+                            <option value="">Select Level</option>
+                            <option value="STANDARD">Standard</option>
+                            <option value="HIGHER">Higher</option>
+                        </select>
+                    </div>
+
+                    <!-- Publication Date Input -->
+                    <div class="form-group">
+                        <label for="publicationDate">Publication Date:</label>
+                        <input type="date" id="publicationDate">
+                    </div>
+
+                    <!-- Additional Information Input -->
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Info:</label>
+                        <textarea id="additionalInfo" placeholder="Enter additional information"></textarea>
+                    </div>
+
+                    <!-- Topic Selection -->
+                    <div class="form-group">
+                        <label for="topic">Topic:</label>
+                        <div class="topic-selection">
+                            <!-- Topic dropdown -->
+                            <select id="topicSelect">
+                                <option value="">Select Topic</option>
+                            </select>
+                            <!-- Button to show new topic input -->
+                            <button type="button" class="secondary-btn" onclick="showNewTopicInput()">Add New Topic</button>
+                        </div>
+                        <!-- New topic input section -->
+                        <div id="newTopicInput" style="display: none;">
+                            <input type="text" id="newTopic" placeholder="Enter new topic name">
+                            <button type="button" class="secondary-btn" onclick="createNewTopic()">Create Topic</button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="primary-btn">Add Question</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="section">
+            <h2>Topics in this Question Bank</h2>
+            <!-- Container for displaying topics -->
+            <div id="topicsList" class="topics-list"></div>
+        </section>
+
+        <!-- Questions Display Section -->
+        <section class="section">
+            <h2>Questions</h2>
+            <!-- Container for displaying questions -->
+            <div id="questionsList"></div>
+        </section>
+    </div>
+
+    <!-- Topic Management Modal -->
+    <div id="newTopicModal" class="modal">
+        <div class="modal-content">
+            <h3>Manage Topics</h3>
+            <!-- New topic input section -->
+            <div class="topic-input-container">
+                <input type="text" id="modalTopicInput" placeholder="Enter topic name">
+                <button onclick="createNewTopicFromModal()" class="primary-btn">Add</button>
+            </div>
+            <!-- Topics lists container -->
+            <div class="modal-topics-list" id="modalTopicsList">
+                <!-- Bank-specific topics section -->
+                <h4 class="mt-4">Topics in this Question Bank</h4>
+                <div id="bankTopicsList" class="row g-3">
+                    <!-- Bank-specific topics will be loaded here -->
+                </div>
+                <h4><br></h4>
+                <!-- Other topics section -->
+                <h4 class="mt-4">Other Topics</h4>
+                <div id="otherTopicsList" class="row g-3">
+                    <!-- Other topics will be loaded here -->
+                </div>
+            </div>
+            <!-- Modal buttons -->
+            <div class="modal-buttons">
+                <button onclick="closeTopicModal()" class="secondary-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to JavaScript file for question bank functionality -->
+    <script src="questionbank.js"></script>
+    <!-- Inline JavaScript for mark scheme toggle -->
+    <script>
+    // Function to toggle mark scheme visibility based on question type
+    function toggleMarkScheme() {
+        const questionType = document.getElementById('questionType').value;
+        const markSchemeGroup = document.getElementById('markSchemeGroup');
+        markSchemeGroup.style.display = questionType === 'MULTIPLE_CHOICE' ? 'none' : 'block';
+    }
+
+    // Initialize mark scheme visibility on page load
+    document.addEventListener('DOMContentLoaded', toggleMarkScheme);
+    </script>
+</body>
+</html> 

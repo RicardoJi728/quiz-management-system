@@ -1,0 +1,55 @@
+<!-- Quiz Results Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Quiz Results</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax configuration for mathematical notation support -->
+    <script>
+        window.MathJax = {
+            loader: {load: ['input/tex', 'output/chtml']},
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <!-- Load MathJax library -->
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Results section -->
+        <section class="section">
+            <!-- Page title -->
+            <h2>Quiz Results</h2>
+            <!-- Container for quiz results content -->
+            <div id="resultsContent">
+                <!-- Score display section -->
+                <div class="score-section">
+                    <h3>Your Score</h3>
+                    <!-- Container for displaying the final score -->
+                    <div id="score"></div>
+                </div>
+                <!-- Time taken section -->
+                <div class="time-section">
+                    <!-- Container for displaying time spent on quiz -->
+                    <p id="timeSpent"></p>
+                </div>
+                <!-- Question review section -->
+                <div id="questionReview"></div>
+            </div>
+        </section>
+    </div>
+    <!-- Link to JavaScript file for quiz results functionality -->
+    <script src="quiz-results.js"></script>
+</body>
+</html> 

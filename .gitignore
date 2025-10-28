@@ -24,3 +24,7 @@ target/
 
 ### Environment Variables ###
 .env
+.DS_Store
+**/.DS_Store
+node_modules/
+.DS_Store

@@ -1,0 +1,396 @@
+<!-- Quiz Creation Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Character encoding for proper text rendering -->
+    <meta charset="UTF-8">
+    <!-- Page title displayed in browser tab -->
+    <title>Create Quiz</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax configuration for mathematical notation support -->
+    <script>
+        window.MathJax = {
+            loader: {load: ['input/tex', 'output/chtml']},
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <!-- Load MathJax library -->
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+    <!-- Custom styles for quiz creation page -->
+    <style>
+        /* Quiz mode selection buttons container */
+        .quiz-modes {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        /* Styling for quiz mode buttons */
+        .mode-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect for mode buttons */
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Active state for selected mode button */
+        .mode-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Topic section container styling */
+        .topic-section {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        /* Hover effect for topic sections */
+        .topic-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Topic section header styling */
+        .topic-section h4 {
+            color: #1976D2;
+            font-size: 1.2em;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1976D2;
+        }
+
+        /* Level section container styling */
+        .level-section {
+            background-color: #f8f9fa;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Level section header styling */
+        .level-section h5 {
+            color: #495057;
+            font-size: 1.1em;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Question checkbox container styling */
+        .question-checkbox {
+            background-color: white;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        /* Hover effect for question checkboxes */
+        .question-checkbox:hover {
+            background-color: #f5f5f5;
+            border-color:  #3498db;
+        }
+
+        /* Question checkbox label styling */
+        .question-checkbox label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Checkbox input styling */
+        .question-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Question text styling */
+        .question-text {
+            flex: 1;
+            font-size: 1em;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Question points badge styling */
+        .question-points {
+            background-color: #e3f2fd;
+            color: #1976D2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Selected questions counter styling */
+        .selected-count {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* Quiz form container styling */
+        .quiz-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Form header container styling */
+        .form-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Search box styling */
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            width: 250px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        /* Search box focus state */
+        .search-box:focus {
+            border-color:  #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76,175,80,0.2);
+        }
+
+        /* Primary button styling */
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Primary button hover state */
+        .btn-primary:hover {
+            background-color:  #3498db;
+        }
+
+        /* Quiz form button styling */
+        .quiz-form button[type="submit"],
+        .quiz-form .btn-primary {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Loading state message styling */
+        .loading-questions {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        /* No questions state message styling */
+        .no-questions {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* Quiz mode buttons container styling */
+        .quiz-mode-buttons button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            margin: 0 10px;
+            border-radius: 6px;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Header section with title and back button -->
+        <div class="header">
+            <h1>Create Quiz</h1>
+            <!-- Back button to return to question bank -->
+            <button onclick="window.location.href='questionbank.html?bankId=' + new URLSearchParams(window.location.search).get('bankId')" class="back-btn">Back to Question Bank</button>
+        </div>
+
+        <!-- Quiz Mode Selection Section -->
+        <section class="section">
+            <h2>Select Quiz Mode</h2>
+            <!-- Quiz mode selection buttons -->
+            <div class="quiz-mode-buttons">
+                <button onclick="showRandomQuiz()" class="active">Random</button>
+                <button onclick="showCustomQuiz()">Custom</button>
+                <button onclick="showFullQuiz()">Full</button>
+                <button onclick="showPracticeQuiz()">Practice</button>
+            </div>
+
+            <!-- Random Quiz Configuration Form -->
+            <div id="randomQuizForm" class="quiz-form">
+                <h3>Random Quiz Configuration</h3>
+                <form id="quizConfigForm">
+                    <!-- Time limit input -->
+                    <div class="form-group">
+                        <label>Time Limit (minutes):</label>
+                        <input type="number" id="timeLimit" value="15" required min="1">
+                    </div>
+                    
+                    <!-- Number of questions input -->
+                    <div class="form-group">
+                        <label>Number of Questions:</label>
+                        <input type="number" id="numberOfQuestions" value="10" required min="1">
+                    </div>
+                    
+                    <!-- Container for dynamically loaded topics -->
+                    <div id="topicsList">
+                        <!-- Topics will be loaded dynamically -->
+                    </div>
+                    
+                    <!-- Submit button to start the quiz -->
+                    <button type="submit" class="btn btn-primary">Start Quiz</button>
+                </form>
+            </div>
+
+            <!-- Custom Quiz Configuration Form -->
+            <div id="customQuizForm" class="quiz-form" style="display: none;">
+                <h3>Select Questions for Quiz</h3>
+                <!-- Form header with time limit and search -->
+                <div class="form-header">
+                    <!-- Time limit input for custom quiz -->
+                    <div class="form-group">
+                        <label>Time Limit (minutes):</label>
+                        <input type="number" id="customTimeLimit" value="5" required min="1">
+                    </div>
+                    <!-- Search box for filtering questions -->
+                    <input type="text" id="searchQuestions" placeholder="Search questions..." class="search-box">
+                </div>
+                <!-- Counter for selected questions -->
+                <div class="selected-count">
+                    Selected Questions: <span id="selectedCount">0</span>
+                </div>
+                <!-- Container for dynamically loaded questions -->
+                <div id="questionsList">
+                    <!-- Questions will be loaded here grouped by topic and level -->
+                </div>
+                <!-- Button to start the custom quiz -->
+                <button onclick="startCustomQuiz()" class="btn btn-primary">Start Selected Quiz</button>
+            </div>
+
+            <!-- Full Quiz Configuration Form -->
+            <div id="fullQuizForm" class="quiz-form" style="display: none;">
+                <h3>Full Quiz Configuration</h3>
+                <!-- Time limit input for full quiz -->
+                <div class="form-group">
+                    <label>Time Limit (minutes):</label>
+                    <input type="number" id="fullTimeLimit" value="15" required min="1">
+                </div>
+                <!-- Information box explaining full quiz mode -->
+                <div class="info-box">
+                    <p>This mode will include all questions from the selected difficulty levels.</p>
+                </div>
+                <!-- Difficulty level selection section -->
+                <div id="fullQuizLevels" class="level-selection">
+                    <h4>Select Difficulty Levels:</h4>
+                    <!-- Checkbox group for level selection -->
+                    <div class="checkbox-group">
+                        <!-- Standard level checkbox -->
+                        <label class="level-checkbox">
+                            <input type="checkbox" name="fullQuizLevels" value="STANDARD" checked>
+                            <span class="level-label">Standard Level</span>
+                            <span class="question-count" id="standardCount"></span>
+                        </label>
+                        <!-- Higher level checkbox -->
+                        <label class="level-checkbox">
+                            <input type="checkbox" name="fullQuizLevels" value="HIGHER">
+                            <span class="level-label">Higher Level</span>
+                            <span class="question-count" id="higherCount"></span>
+                        </label>
+                    </div>
+                </div>
+                <!-- Button to start the full quiz -->
+                <button onclick="startFullQuiz()" class="btn btn-primary">Start Full Quiz</button>
+            </div>
+
+            <!-- Practice Quiz Configuration Form -->
+            <div id="practiceQuizForm" class="quiz-form" style="display: none;">
+                <h3>Practice Quiz Configuration</h3>
+                <!-- Description of practice quiz mode -->
+                <p>This quiz will focus on questions you previously answered incorrectly.</p>
+                
+                <!-- Time limit input for practice quiz -->
+                <div class="form-group">
+                    <label for="practiceTimeLimit">Time Limit (minutes):</label>
+                    <input type="number" id="practiceTimeLimit" min="1" value="10">
+                </div>
+
+                <!-- Difficulty level selection for practice quiz -->
+                <div class="form-group">
+                    <label>Select Difficulty Level:</label>
+                    <div class="checkbox-group">
+                        <!-- Standard level checkbox for practice quiz -->
+                        <label>
+                            <input type="checkbox" name="practiceLevels" value="STANDARD"> Standard Level
+                        </label>
+                        <!-- Higher level checkbox for practice quiz -->
+                        <label>
+                            <input type="checkbox" name="practiceLevels" value="HIGHER"> Higher Level
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Button to start the practice quiz -->
+                <button onclick="startPracticeQuiz()" class="btn btn-primary">Start Practice Quiz</button>
+            </div>
+        </section>
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html> 

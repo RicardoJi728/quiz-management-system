@@ -1,0 +1,84 @@
+<!-- Quiz Taking Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Take Quiz</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax configuration for mathematical notation support -->
+    <script>
+        window.MathJax = {
+            loader: {load: ['input/tex', 'output/chtml']},
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <!-- Load MathJax library -->
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Header section with quiz information -->
+        <div class="header">
+            <!-- Quiz progress information -->
+            <div class="quiz-info">
+                <!-- Timer display showing remaining time -->
+                <div id="timeRemaining" class="timer">Time Remaining: --:--</div>
+                <!-- Question counter showing current progress -->
+                <div id="questionCounter" class="progress">Question 0 of 0</div>
+            </div>
+        </div>
+
+        <!-- Main quiz section -->
+        <section class="section">
+            <!-- Quiz content container -->
+            <div class="quiz-content">
+                <!-- Question navigation bar -->
+                <div id="questionNav" class="question-navigator"></div>
+                
+                <!-- Container for displaying questions -->
+                <div id="questionContent" class="questions-container">
+                    <!-- Questions will be loaded here -->
+                </div>
+
+                <!-- Navigation and submission buttons -->
+                <div class="navigation-buttons">
+                    <!-- Button to go to previous question -->
+                    <button onclick="previousQuestion()" class="nav-btn" id="prevBtn">Previous</button>
+                    <!-- Button to go to next question -->
+                    <button onclick="nextQuestion()" class="nav-btn" id="nextBtn">Next</button>
+                    <!-- Button to submit the quiz -->
+                    <button onclick="submitQuiz()" class="submit-btn" id="submitBtn">Submit Quiz</button>
+                </div>
+
+                <!-- Practice Quiz Configuration Form -->
+                <div id="practiceQuizForm" class="quiz-form" style="display: none;">
+                    <!-- Form header with description -->
+                    <div class="form-header">
+                        <h3>Practice Incorrect Questions</h3>
+                        <p>This quiz will contain questions you've answered incorrectly before.</p>
+                    </div>
+                    <!-- Time limit input for practice quiz -->
+                    <div class="form-group">
+                        <label for="practiceTimeLimit">Time Limit (minutes):</label>
+                        <input type="number" id="practiceTimeLimit" min="1" value="30">
+                    </div>
+                    <!-- Button to start the practice quiz -->
+                    <button onclick="startPracticeQuiz()" class="btn btn-primary">Start Practice Quiz</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Link to JavaScript file for quiz taking functionality -->
+    <script src="take-quiz.js"></script>
+</body>
+</html> 

@@ -1,69 +1,118 @@
 package com.example.app.security;
 
+import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
+
+import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.Keys;
 
+// Utility class for JWT token operations
 @Component
 public class JwtUtils {
+    // Logger for debugging and error tracking
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
+    // JWT secret key from application properties
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
+    // JWT token expiration time from application properties
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateToken(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS512)
-                .compact();
+    // Get the signing key for JWT operations
+    private Key getSigningKey() {
+        try {
+            byte[] keyBytes = Base64.getDecoder().decode(jwtSecret);
+            if (keyBytes.length * 8 < 512) {
+                throw new IllegalStateException("JWT secret key must be at least 512 bits");
+            }
+            return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Invalid JWT secret key", e);
+        }
     }
 
-    public String getUserNameFromToken(String token) {
+    // Extract username from JWT token
+    public String extractUsername(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
+            logger.error("Error extracting username from token", e);
+            return null;
+        }
+    }
+
+    // Validate JWT token against user details
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        try {
+            // Extract username from the token
+            final String username = extractUsername(token);
+            
+            // Check if username matches and token is not expired
+            return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (Exception e) {
+            // Log any errors during validation
+            logger.error("Error validating token", e);
+            return false;
+        }
+    }
+
+    // Check if token has expired
+    private boolean isTokenExpired(String token) {
+        try {
+            // Extract expiration date from token and check if it's before current time
+            return extractExpiration(token).before(new Date());
+        } catch (Exception e) {
+            // Log any errors during expiration check
+            logger.error("Error checking token expiration", e);
+            return true;  // Assume token is expired if there's an error
+        }
+    }
+
+    // Extract expiration date from token
+    private Date extractExpiration(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getExpiration();
     }
 
-    public boolean validateToken(String token) {
+    // Generate new JWT token for username
+    public String generateToken(String username) {
         try {
-            Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-                .build()
-                .parseClaimsJws(token);
-            return true;
-        } catch (SecurityException e) {
-            logger.error("Invalid JWT signature: {}", e.getMessage());
-        } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
+            if (jwtSecret == null || jwtSecret.trim().isEmpty()) {
+                throw new IllegalStateException("JWT secret is not configured");
+            }
+            
+            Date now = new Date();
+            Date expiry = new Date(now.getTime() + jwtExpirationMs);
+            
+            return Jwts.builder()
+                    .setSubject(username)
+                    .setIssuedAt(now)
+                    .setExpiration(expiry)
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                    .compact();
+        } catch (Exception e) {
+            logger.error("Error generating token: {}", e.getMessage());
+            throw new RuntimeException("Could not generate token: " + e.getMessage());
         }
-        return false;
     }
 } 

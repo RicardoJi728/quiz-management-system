@@ -1,0 +1,49 @@
+<!-- Topic View Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Topic View</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax configuration for mathematical notation support -->
+    <script>
+        window.MathJax = {
+            loader: {load: ['input/tex', 'output/chtml']},
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <!-- Load MathJax library -->
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Header section with topic title and back button -->
+        <div class="header">
+            <!-- Dynamic topic title -->
+            <h1 id="topicTitle">Loading...</h1>
+            <!-- Back button to return to question bank -->
+            <button onclick="window.history.back()" class="back-btn">Back to Question Bank</button>
+        </div>
+
+        <!-- Questions section -->
+        <section class="section">
+            <!-- Section title -->
+            <h2>Questions in this Topic</h2>
+            <!-- Container for displaying questions in the topic -->
+            <div id="topicQuestionsList"></div>
+        </section>
+    </div>
+    <!-- Link to JavaScript file for topic functionality -->
+    <script src="topic.js"></script>
+</body>
+</html> 

@@ -1,0 +1,82 @@
+<!-- Registration page for new user accounts -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title displayed in browser tab -->
+    <title>Register</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container for content -->
+    <div class="container">
+        <!-- Registration form title -->
+        <h1 class="register-title">Register</h1>
+        <!-- Registration form with custom submit handling -->
+        <form id="registerForm" onsubmit="return false;">
+            <!-- Username input field -->
+            <input type="text" id="registerUsername" placeholder="Username" required>
+            <!-- Password input field -->
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <!-- Email input field -->
+            <input type="email" id="registerEmail" placeholder="Email" required>
+            <!-- Submit button with custom click handler -->
+            <button type="button" id="submitBtn" class="btn primary" onclick="handleRegister()">Register</button>
+        </form>
+        <!-- Back to login link section -->
+        <div class="register-link">
+            <!-- Button to return to login page -->
+            <button onclick="window.location.href='/'" class="btn secondary">Back to Login</button>
+        </div>
+    </div>
+    <!-- Inline JavaScript for registration handling -->
+    <script>
+        // Async function to handle the registration process
+        async function handleRegister() {
+            // Disable submit button to prevent double submission
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            
+            // Collect user input data
+            const userData = {
+                username: document.getElementById('registerUsername').value.trim(),
+                password: document.getElementById('registerPassword').value,
+                email: document.getElementById('registerEmail').value.trim()
+            };
+
+            try {
+                // Log registration attempt
+                console.log('Attempting registration...');
+                // Send POST request to registration endpoint
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                // Parse response data
+                const data = await response.json();
+                console.log('Server response:', response.status);
+
+                // Handle successful registration
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = '/';
+                } else {
+                    // Handle registration failure
+                    alert(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                // Handle any errors during registration
+                console.error('Registration error:', error);
+                alert('Registration failed: ' + error.message);
+            } finally {
+                // Re-enable submit button regardless of outcome
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html> 
