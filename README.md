@@ -40,3 +40,4 @@ Anthropic Claude. (2025). AI assistance for programming and documentation. Avail
 [Accessed 14 Mar. 2025].
 
 Note: While Claude provided assistance with programming concepts, documentation, and best practices, all code implementation and system architecture decisions were made by the author. This quiz application was developed independently with some guidance from AI.
+# quiz-management-system
