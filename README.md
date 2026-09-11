@@ -1,5 +1,3 @@
-Hello, World! My name is Ricardo Ji.
-
 # Quiz Management System
 
 A comprehensive quiz management system built with Spring Boot and JavaScript, allowing users to create, manage, and take quizzes with support for mathematical expressions.
@@ -56,11 +54,3 @@ src/main/java/com/example/app/
 - `POST /api/quizzes` - Create quiz
 - `GET /api/questions` - List questions
 - `POST /api/questions` - Create question
-
-## Acknowledgments
-
-Anthropic Claude. (2025). AI assistance for programming and documentation. Available at: https://www.anthropic.com/claude.
-[Accessed 14 Mar. 2025].
-
-Note: While Claude provided assistance with programming concepts, documentation, and best practices, all code implementation and system architecture decisions were made by the author. This quiz application was developed independently with some guidance from AI.
-
